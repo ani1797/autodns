@@ -1,0 +1,7 @@
+apiVersion: v2
+name: autodns
+description: Application that automatically updates the hostfile or dnsmasq file with entries of each service/ingress being created.
+
+type: application
+version: 0.1.0
+appVersion: "1.16.0"

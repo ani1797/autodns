@@ -1,0 +1,9 @@
+replicas: 3
+
+
+rbac:
+  create: true
+
+serviceAccount:
+  create: true
+  name: autodns-api

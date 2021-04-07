@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "chart.fullname" . }}
+  labels:
+    {{- include "chart.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicas }}
+  selector:
+    matchLabels:
+      {{- include "chart.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "chart.selectorLabels" . | nindent 8 }}
+    spec:
+      serviceAccountName: autodns-api
+      automountServiceAccountToken: true
+      initContainers:
+        - name: init-drive
+          image: busybox
+          command: ['sh', '-c', 'echo >> /opt/dnsmasq.conf']
+          volumeMounts:
+          - mountPath: /opt/
+            name: opt-drive
+      containers:
+      - name: autodns
+        image: ani1797/autodns:1.0
+        imagePullPolicy: Always
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+        volumeMounts:
+        - mountPath: /opt/
+          name: opt-drive
+      volumes:
+        - name: opt-drive
+          hostPath:
+            path: /var/local-path-provisioner/autodns/
