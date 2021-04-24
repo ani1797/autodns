@@ -10,9 +10,17 @@ if (process.env.NODE_ENV === "production" || config.clusters.length === 0) confi
 
 const watch = new Watch(config);
 
-watch.watch('/api/v1/services', {}, on_service_create, console.log);
+function start_watch() {
+  try {
+    watch.watch('/api/v1/services', {}, on_service_create, console.log);
+    watch.watch('/apis/networking.k8s.io/v1/ingresses', {}, on_ingress_create, console.log);
+  } catch(err) {
+    console.log("There was an error", err)
+    start_watch()
+  }
+}
 
-watch.watch('/apis/networking.k8s.io/v1/ingresses', {}, on_ingress_create, console.log);
+start_watch()
 
 function on_service_create(phase, { metadata, spec, status }) {
   const { ip } = status.loadBalancer.ingress[0];

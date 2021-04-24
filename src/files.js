@@ -1,4 +1,4 @@
-const { readFileSync, appendFileSync, writeFileSync } = require('fs');
+const { readFileSync, appendFileSync, writeFileSync, existsSync } = require('fs');
 
 const { FILEPATH = '/opt/dnsmasq.conf', FORMAT = 'dnsmasq' } = process.env;
 
@@ -12,6 +12,8 @@ function getFormatString() {
       return null;
   }
 }
+
+if (!existsSync(FILEPATH)) writeFileSync(FILEPATH, "")
 
 function entry_exists(ip, host) {
   function exists(predicate) {
