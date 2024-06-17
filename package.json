@@ -11,7 +11,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@kubernetes/client-node": "^0.14.0"
+    "@kubernetes/client-node": "^0.18.1"
   },
   "repository": {
     "url": "https://github.com/ani1797/autodns"
